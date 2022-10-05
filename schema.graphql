@@ -12,10 +12,10 @@ type Person {
 }
 
 type People {
-    total: Int!
+    count: Int!
     next: Int
     previous: Int
-    result: [Person]
+    results: [Person]
 }
 
 type JWT {

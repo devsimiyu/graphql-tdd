@@ -10,7 +10,7 @@ def searchPeople(page, search):
     }
     response = requests.get(url, params)
     data = response.json()
-    total = data.get('count', 0)
+    count = data.get('count', 0)
     next = data.get('next')
     previous = data.get('previous')
     people = map(lambda x: {
@@ -21,8 +21,8 @@ def searchPeople(page, search):
         'homeworld': x['homeworld']
     }, data.get('results', []))
     return {
-        'total': total,
+        'count': count,
         'next': furl(next).args['page'] if next else None,
         'previous': furl(previous).args['page'] if previous else None,
-        'result': people
+        'results': people
     }

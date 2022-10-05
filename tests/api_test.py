@@ -14,43 +14,51 @@ def test_health(http_client):
     assert response.data == b'Hello, world!'
 
 
-def test_listPosts(http_client):
+def test_getPeople(http_client):
     response = http_client.post(
         '/graphql',
         data=json.dumps({
             'query': '''
-                query getPosts {
-                    listPosts {
-                        id
-                        title
-                    }
-                }
-            '''
-        }),
-        content_type='application/json'
-    )
-    assert response.status_code == 200
-    assert json.loads(response.data) == {"data":{"listPosts":[{"id":"1","title":"post 1"},{"id":"2","title":"post 2"}]}}
-
-
-def test_getPost(http_client):
-    response = http_client.post(
-        '/graphql',
-        data=json.dumps({
-            'query': '''
-                query findPost($id: ID!) {
-                    getPost(id: $id) {
-                        id,
-                        title,
-                        description
+                query fetchPeople($page: Int!, $search: String) {
+                    getPeople(page: $page, search: $search) {
+                        count
+                        next
+                        previous
+                        results {
+                            name
+                            gender
+                            homeworld
+                            height
+                            mass
+                        }
                     }
                 }
             ''',
             'variables': {
-                'id': 0
+                'page': 1,
+                'search': 'Luke'
             }
         }),
         content_type='application/json'
     )
     assert response.status_code == 200
-    assert json.loads(response.data) == {'data': {'getPost': {'description': 'post desc 1', 'id': '1', 'title': 'post 1'}}}
+
+
+def test_authenticate(http_client):
+    response = http_client.post(
+        '/graphql',
+        data=json.dumps({
+            'query': '''
+                mutation login($username: String!) {
+                    authenticate(username: $username) {
+                        token
+                    }
+                }
+            ''',
+            'variables': {
+                'username': 'imrsqd',
+            }
+        }),
+        content_type='application/json'
+    )
+    assert response.status_code == 200
