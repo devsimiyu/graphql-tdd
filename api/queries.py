@@ -1,3 +1,6 @@
+from api.auth import auth
+
+
 posts = [
     {
         'id': 1,
@@ -11,6 +14,7 @@ posts = [
     }
 ]
 
+@auth
 def listPosts_resolver(obj, info):
     return posts
 
