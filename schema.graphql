@@ -3,17 +3,29 @@ schema {
     mutation: Mutation
 }
 
-type Post {
-    id: ID!
-    title: String!
-    description: String!
+type Person {
+    name: String!
+    height: String
+    mass: String
+    gender: String
+    homeworld: String
+}
+
+type People {
+    total: Int!
+    next: Int
+    previous: Int
+    result: [Person]
+}
+
+type JWT {
+    token: String!
 }
 
 type Query {
-    listPosts: [Post]
-    getPost(id: ID!): Post
+    getPeople(page: Int!, search: String): People
 }
 
 type Mutation {
-    createPost(title: String!, description: String!): Post!
+    authenticate(username: String!): JWT!
 }

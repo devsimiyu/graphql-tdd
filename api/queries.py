@@ -1,29 +1,20 @@
+from http import server
+import os
 from api.auth import auth
+from repository import starwars_repo
+import jwt
 
 
-posts = [
-    {
-        'id': 1,
-        'title': 'post 1',
-        'description': 'post desc 1'
-    },
-    {
-        'id': 2,
-        'title': 'post 2',
-        'description': 'post desc 2'
+def authenticate_resolver(obj, info, username):
+    secret = os.environ['JWT_SECRET']
+    token = jwt.encode({
+        'username': username
+    }, secret, algorithm='HS256')
+    return {
+        'token': token
     }
-]
+
 
 @auth
-def listPosts_resolver(obj, info):
-    return posts
-
-def getPost_resolver(obj, info, id):
-    return posts[int(id)]
-
-def createPost_resolver(obj, info, title, description):
-    return {
-        'id': 3,
-        'title': title,
-        'description': description
-    }
+def getPeople_resolver(obj, info, page, search=None):
+    return starwars_repo.searchPeople(page, search)
